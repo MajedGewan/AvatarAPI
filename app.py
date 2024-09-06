@@ -70,4 +70,5 @@ def get_Seha():
 #    agent_executor = create_agent(language)
 #    return make_response('OK', 200)
 
-app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
