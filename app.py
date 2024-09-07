@@ -38,9 +38,9 @@ def build_retriever_tool(vector_store, language):
     )
     return retriever_tool
 
-def create_agent(language):
+def create_agent(language, file):
     global agent_executor
-    docs = get_document_from_txt("seha.md")
+    docs = get_document_from_txt(file)
     vector_store = create_db(docs)
     retriever_tool = build_retriever_tool(vector_store, language)
     search_tool = TavilySearchResults(max_results=2)
@@ -54,7 +54,7 @@ def create_agent(language):
 def get_Seha():
     global agent_executor
     if agent_executor is None:
-        agent_executor = create_agent("")
+        agent_executor = create_agent("", 'seha.md')
 
     data = json.loads(request.data)
     input = data['input']   
@@ -69,6 +69,18 @@ def get_Seha():
 #    language = data['language']  
 #    agent_executor = create_agent(language)
 #    return make_response('OK', 200)
+
+@app.route('/oman/', methods=['POST'])
+def get_oman():
+    global agent_executor
+    if agent_executor is None:
+        agent_executor = create_agent("",'KnowledgeBase.txt')
+
+    data = json.loads(request.data)
+    input = data['input']   
+    response = agent_executor.invoke({"messages": input})
+    print(response['messages'][-1].content)
+    return response['messages'][-1].content
 
 if __name__ == '__main__':
     app.run(debug=True)
