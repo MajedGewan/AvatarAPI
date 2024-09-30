@@ -83,7 +83,7 @@ def get_oman():
     return response['messages'][-1].content
 
 @app.route('/reba/', methods=['POST'])
-def get_oman():
+def get_reba():
     global agent_executor
     if agent_executor is None:
         agent_executor = create_agent("",'KnowledgeBaseRefined.md', "Definition of Reba in Islam", f"Searches and returns information about Reba in Islam, and how Islamic banking solved this issue.")
