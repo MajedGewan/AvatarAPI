@@ -29,20 +29,20 @@ def create_db(docs):
     vector_store = FAISS.from_documents(docs, embedding=embedding)
     return vector_store
 
-def build_retriever_tool(vector_store, language):
+def build_retriever_tool(vector_store, language, title, info):
     retriever = vector_store.as_retriever()
     retriever_tool = create_retriever_tool(
     retriever,
-    "seha_information",
-    f"Searches and returns information about Seha Organization in the UAE.",
+    title,
+    info,
     )
     return retriever_tool
 
-def create_agent(language, file):
+def create_agent(language, file, title, info):
     global agent_executor
     docs = get_document_from_txt(file)
     vector_store = create_db(docs)
-    retriever_tool = build_retriever_tool(vector_store, language)
+    retriever_tool = build_retriever_tool(vector_store, language, title, info)
     search_tool = TavilySearchResults(max_results=2)
     tools = [retriever_tool, search_tool]
     model = ChatOpenAI(model="gpt-4")
@@ -54,7 +54,7 @@ def create_agent(language, file):
 def get_Seha():
     global agent_executor
     if agent_executor is None:
-        agent_executor = create_agent("", 'seha.md')
+        agent_executor = create_agent("", 'seha.md', "seha_information", f"Searches and returns information about Seha Organization in the UAE.")
 
     data = json.loads(request.data)
     input = data['input']   
@@ -74,13 +74,26 @@ def get_Seha():
 def get_oman():
     global agent_executor
     if agent_executor is None:
-        agent_executor = create_agent("",'KnowledgeBase.txt')
+        agent_executor = create_agent("",'KnowledgeBase.txt', "oman_law_2034", f"Searches and returns information about Oman law number 2034.")
 
     data = json.loads(request.data)
     input = data['input']   
     response = agent_executor.invoke({"messages": input})
     print(response['messages'][-1].content)
     return response['messages'][-1].content
+
+@app.route('/reba/', methods=['POST'])
+def get_oman():
+    global agent_executor
+    if agent_executor is None:
+        agent_executor = create_agent("",'KnowledgeBaseRefined.md', "Definition of Reba in Islam", f"Searches and returns information about Reba in Islam, and how Islamic banking solved this issue.")
+
+    data = json.loads(request.data)
+    input = data['input']   
+    response = agent_executor.invoke({"messages": input})
+    print(response['messages'][-1].content)
+    return response['messages'][-1].content
+
 
 if __name__ == '__main__':
     app.run(debug=True)
