@@ -70,20 +70,20 @@ def get_Seha():
 #    agent_executor = create_agent(language)
 #    return make_response('OK', 200)
 
+#@app.route('/oman/', methods=['POST'])
+#def get_oman():
+#    global agent_executor
+#    if agent_executor is None:
+#        agent_executor = create_agent("",'KnowledgeBase.txt', "oman_law_2034", f"Searches and returns information about Oman law number 2034.")
+#
+#    data = json.loads(request.data)
+#    input = data['input']   
+#    response = agent_executor.invoke({"messages": input})
+#    print(response['messages'][-1].content)
+#    return response['messages'][-1].content
+
 @app.route('/oman/', methods=['POST'])
 def get_oman():
-    global agent_executor
-    if agent_executor is None:
-        agent_executor = create_agent("",'KnowledgeBase.txt', "oman_law_2034", f"Searches and returns information about Oman law number 2034.")
-
-    data = json.loads(request.data)
-    input = data['input']   
-    response = agent_executor.invoke({"messages": input})
-    print(response['messages'][-1].content)
-    return response['messages'][-1].content
-
-@app.route('/reba/', methods=['POST'])
-def get_reba():
     global agent_executor
     if agent_executor is None:
         agent_executor = create_agent("",'KnowledgeBaseRefined.md', "Definition of Reba in Islam", f"Searches and returns information about Reba in Islam, and how Islamic banking solved this issue.")
